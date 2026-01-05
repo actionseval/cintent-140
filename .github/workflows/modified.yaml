@@ -1,0 +1,95 @@
+# Based on https://github.com/PyO3/maturin/blob/main/.github/workflows/lint.yml.
+
+name: Lint
+
+# CINTENT >> MANUAL TRIGGER
+# on: [push, pull_request]
+on: [repository_dispatch, workflow_dispatch]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref_name }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  # CINTENT >> UNSUPPORTED_LANGUAGE
+  # fmt:
+  #   name: Rustfmt
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: dtolnay/rust-toolchain@stable
+  #       with:
+  #         components: rustfmt
+  #     - name: cargo fmt
+  #       run: cargo fmt --all -- --check
+
+  # CINTENT >> UNSUPPORTED_LANGUAGE
+  # clippy:
+  #   name: Clippy
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: dtolnay/rust-toolchain@stable
+  #       with:
+  #         components: clippy
+  #     - name: cargo clippy
+  #       run: cargo clippy --tests --all-features -- -D warnings
+
+  # CINTENT >> NO_TRACEE
+  # black:
+  #   name: Black
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-python@v4
+  #       with:
+  #         python-version: '3.x'
+  #     - uses: psf/black@stable
+  #       with:
+  #         jupyter: true
+
+  # CINTENT >> NO_TRACEE
+  # ruff:
+  #   name: Ruff
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: astral-sh/ruff-action@v3
+
+  mypy:
+    name: Mypy
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash -l {0}
+    steps:
+      - uses: actions/checkout@v4
+
+      # CINTENT >> INSERT_CINTENT
+      - uses: JavidDitty/setup-cintent@a606c80c34ec190c6a20dea33d6d58ddb6c4e0cc
+  
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          activate-environment: av2
+          environment-file: conda/environment.yml
+          mamba-version: "*"
+          miniforge-version: latest
+
+      - run: mamba install mypy -y
+      
+      - run: mypy .
+
+  # spell_check:
+  #   name: Spellcheck
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: codespell-project/actions-codespell@master
+
+      # CINTENT >> INSERT_CINTENT
+      - name: Upload CIntent Artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ env.CINTENT_ARTIFACT_NAME }}
+          path: ${{ env.CINTENT_LOGS }}
