@@ -65,8 +65,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # CINTENT >> INSERT_CINTENT
-      - uses: JavidDitty/setup-cintent@de34273526014d7183574037a6e6c199c45b4d18
+      # # CINTENT >> INSERT_CINTENT
+      # - uses: JavidDitty/setup-cintent@de34273526014d7183574037a6e6c199c45b4d18
   
       - uses: conda-incubator/setup-miniconda@v3
         with:
@@ -79,12 +79,12 @@ jobs:
       
       - run: mypy .
       
-      - name: Upload CIntent Artifacts
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: ${{ env.CINTENT_ARTIFACT_NAME }}
-          path: ${{ env.CINTENT_LOGS }}
+      # - name: Upload CIntent Artifacts
+      #   uses: actions/upload-artifact@v4
+      #   if: always()
+      #   with:
+      #     name: ${{ env.CINTENT_ARTIFACT_NAME }}
+      #     path: ${{ env.CINTENT_LOGS }}
 
   # spell_check:
   #   name: Spellcheck
