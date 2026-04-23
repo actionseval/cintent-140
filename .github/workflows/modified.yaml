@@ -73,9 +73,9 @@ jobs:
           miniforge-version: latest
       
       # CINTENT >> INSERT_CINTENT
-      - uses: JavidDitty/setup-cintent@3638849e94bdb037f0a405375686a8550e6df904
+      - uses: JavidDitty/setup-cintent@main
         with:
-          nonblocking: true
+          profiler: "setprofile"
 
       - run: mamba install mypy -y
       
